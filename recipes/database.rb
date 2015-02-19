@@ -1,8 +1,13 @@
 
-
 include_recipe 'cyclesafe_chef'
 
-database_password = data_bag_item('passwords','database')['mysql']
+if node['instance_role'] == 'vagrant'
+  database_password = data_bag_item('passwords','database')['mysql']
+else
+  database_password = chef_vault_item('passwords','database')['mysql']
+end
+
+
 db_name = node[:cyclesafe_chef][:db_name]
 
 mysql_service db_name do

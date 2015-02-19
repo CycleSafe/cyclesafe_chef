@@ -5,6 +5,10 @@
 
 # absolutely necessary for running programs
 include_recipe 'apt'
+include_recipe 'chef-vault'
+
+# load encrypted data bag secret
+node.default[:cyclesafe_chef][:data_bag_secret] = EncryptedDataBagItem.load_secret("/etc/chef/encrypted_data_bag_secret")
 
 # include git because magically it's not installed
 package 'git'

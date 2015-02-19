@@ -7,9 +7,14 @@ include_recipe 'python'
 # install dependencies
 package 'libffi-dev'
 
-# assign secret_key values
-secret_key = data_bag_item('keys','secret_key')['key']
-database_password = data_bag_item('passwords','database')['mysql']
+# assign secret_key values, using data bag for vagrant instances and vault for remote nodes
+if node['instance_role'] == 'vagrant'
+  secret_key = data_bag_item('passwords','keys')['django']
+  database_password = data_bag_item('passwords','database')['mysql']
+else
+  secret_key = chef_vault_item('passwords','keys')['django']
+  database_password = chef_vault_item('passwords','database')['mysql']
+end
 
 # second secret_key escaped for supervisord pickiness!
 secret_key_supervisord = "#{secret_key.gsub(/%/,'%%')}";
