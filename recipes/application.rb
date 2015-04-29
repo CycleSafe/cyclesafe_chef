@@ -54,14 +54,13 @@ application app_name do
   revision node[:cyclesafe_chef][:revision] if node[:cyclesafe_chef][:revision]
   migrate true
   rollback_on_error false
-  action :deploy
+  action :"#{node[:cyclesafe_chef][:deploy_action]}"
 
   django do
     requirements 'prod_requirements.txt'
-    debug true
+    debug node[:cyclesafe_chef][:debug_mode] == 'true' ? true : false
     packages ['gunicorn']
     settings_template 'settings.py.erb'
-    settings ({:debug => node[:cyclesafe_chef][:debug_mode]})
     
     database do
       database 'cyclesafe'
