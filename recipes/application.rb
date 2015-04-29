@@ -61,6 +61,7 @@ application app_name do
     debug true
     packages ['gunicorn']
     settings_template 'settings.py.erb'
+    settings ({:debug => node[:cyclesafe_chef][:debug_mode]})
     
     database do
       database 'cyclesafe'
